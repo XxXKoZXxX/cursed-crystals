@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Cursed Crystals — GTA V Criminal Underworld</title>
+<title>Cursed Crystals — Grand Theft Auto Los Santos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -82,7 +82,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .subtitle{color:var(--muted);font-size:.95rem;font-weight:600;text-align:center;margin-bottom:14px;letter-spacing:1px;}
 .harm-note{font-size:.78rem;color:#cbd5e1;text-align:center;background:rgba(15,23,42,.8);
   border:1px solid rgba(56,189,248,.35);backdrop-filter:blur(10px);
-  border-radius:12px;padding:10px 16px;margin-bottom:20px;max-width:320px;line-height:1.5;}
+  border-radius:12px;padding:10px 16px;margin-bottom:20px;max-width:340px;line-height:1.5;}
 .best-score{font-family:var(--font-display);font-size:.85rem;font-weight:800;color:var(--gem);margin-bottom:22px;letter-spacing:1px;}
 
 /* ── Neon Buttons ── */
@@ -107,6 +107,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .wanted-stars{font-size:1.1rem;letter-spacing:2px;color:var(--yellow);text-shadow:0 0 10px var(--yellow);}
 @keyframes wanted-flash{0%,100%{opacity:1;color:var(--red);text-shadow:0 0 12px var(--red);}50%{opacity:0.3;color:var(--blue);text-shadow:0 0 12px var(--blue);}}
 .wanted-stars.active{animation:wanted-flash 0.6s ease-in-out infinite;}
+
+.cash-ct{font-family:var(--font-display);font-size:1rem;font-weight:900;color:var(--green);
+  text-shadow:0 0 12px var(--green);white-space:nowrap;}
 
 .music-btn{font-family:var(--font-display);font-size:.72rem;font-weight:800;padding:5px 12px;border-radius:20px;
   text-transform:uppercase;letter-spacing:1px;white-space:nowrap;border:1px solid var(--gem);
@@ -140,11 +143,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .sbadge-nausea{color:var(--orange);border-color:var(--orange);background:rgba(249,115,22,.18);box-shadow:0 0 10px rgba(249,115,22,.3);}
 .sbadge-psycho{color:var(--purple);border-color:var(--purple);background:rgba(192,132,252,.25);box-shadow:0 0 12px rgba(192,132,252,.4);}
 .sbadge-shield{color:var(--blue);  border-color:var(--blue);  background:rgba(56,189,248,.2);box-shadow:0 0 10px rgba(56,189,248,.3);}
+.sbadge-car   {color:var(--yellow);border-color:var(--yellow);background:rgba(251,191,36,.25);box-shadow:0 0 12px rgba(251,191,36,.4);}
 
 /* 3D Viewport */
 #viewport{flex:1;width:100%;min-height:0;position:relative;overflow:hidden;background:#03040a;
   touch-action:none;user-select:none;-webkit-user-select:none;}
 #viewport canvas.world{display:block;width:100%;height:100%;touch-action:none;}
+
+/* Action Controls Overlay */
+.action-bar{position:absolute;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:35;}
+.act-btn{padding:12px 18px;border-radius:14px;font-family:var(--font-display);font-size:.82rem;font-weight:900;
+  cursor:pointer;border:2px solid;text-transform:uppercase;letter-spacing:1px;backdrop-filter:blur(10px);
+  box-shadow:0 4px 20px rgba(0,0,0,.6);transition:all .15s ease;display:flex;align-items:center;gap:8px;}
+.act-shoot{background:rgba(244,63,94,.25);border-color:var(--red);color:#ffffff;box-shadow:0 0 20px rgba(244,63,94,.5);}
+.act-car  {background:rgba(251,191,36,.25);border-color:var(--yellow);color:#ffffff;box-shadow:0 0 20px rgba(251,191,36,.5);}
 
 /* Virtual Joystick */
 #joy-base{position:absolute;width:120px;height:120px;border-radius:50%;display:none;
@@ -155,7 +167,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   border:2px solid rgba(255,255,255,.8);box-shadow:0 0 18px rgba(6,239,239,.8);
   left:34px;top:34px;pointer-events:none;}
 .ctrl-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;
-  color:rgba(255,255,255,.55);font-size:.78rem;font-weight:600;letter-spacing:1px;
+  color:rgba(255,255,255,.75);font-size:.78rem;font-weight:700;letter-spacing:1px;
   pointer-events:none;z-index:25;text-shadow:0 2px 4px #000;}
 
 /* Near Store Interaction Banner */
@@ -173,14 +185,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   background:rgba(6,10,24,.92);backdrop-filter:blur(10px);}
 #minimap{display:block;width:100%;height:100%;}
 
-/* Crystal counter burst */
-.burst-p{position:absolute;left:50%;top:46%;font-size:24px;color:#fff;
-  pointer-events:none;z-index:40;text-shadow:0 0 8px #fff,0 0 18px var(--gem),0 0 30px rgba(192,132,252,.9);
-  animation:burst-fly .8s cubic-bezier(.1,.7,.4,1) forwards;}
-@keyframes burst-fly{
-  from{transform:translate(-50%,-50%) scale(1.2);opacity:1;}
-  to  {transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.2) rotate(140deg);opacity:0;}
-}
+/* Speedometer Overlay */
+#speedometer{position:absolute;bottom:160px;left:20px;font-family:var(--font-display);
+  font-size:.9rem;font-weight:900;color:var(--yellow);text-shadow:0 0 10px var(--yellow);
+  display:none;z-index:30;}
 
 .log-line{width:100%;padding:6px 14px;background:rgba(8,10,20,.92);border-top:1px solid var(--border);
   font-size:.75rem;color:var(--text);font-weight:600;flex-shrink:0;white-space:nowrap;
@@ -249,11 +257,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 <!-- ══ HOME SCREEN ══ -->
 <div id="screen-home" class="screen active">
   <div class="big-title"><span class="title-gem">💎</span><br>Cursed<br>Crystals</div>
-  <div class="subtitle">GTA V Criminal Underworld · Los Santos Cyber Night</div>
-  <div class="harm-note">⚠️ Harm-reduction sim — every side effect shown is based on real crystal meth use. See what it does before you decide.</div>
+  <div class="subtitle">GTA V Criminal Underworld · Los Santos Open World</div>
+  <div class="harm-note">⚠️ Drive any car, outrun police interceptors, shoot weapons & Bank 5 crystals in Los Santos!</div>
   <div id="home-best" class="best-score"></div>
   <button class="btn" onclick="startGame()">Explore the City</button>
-  <div class="subtitle" style="margin-top:10px;font-size:.82rem">Avoid Police & Police Cruisers · Bank 5 crystals to break the curse</div>
+  <div class="subtitle" style="margin-top:10px;font-size:.82rem">WASD to Move/Drive · SPACE to Shoot · F to Steal/Drive Car · E for Shop</div>
 </div>
 
 <!-- ══ GAME SCREEN ══ -->
@@ -261,6 +269,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   <div class="game-hdr">
     <div class="mode-pill">🚨 LOS SANTOS</div>
     <div id="wanted-stars" class="wanted-stars">☆☆☆☆☆</div>
+    <div id="cash-ct" class="cash-ct">💵 $0</div>
     <button id="music-btn" class="music-btn" onclick="toggleMusic()">🎵 MUSIC: ON</button>
     <div class="sleep-wrap">
       <div class="sleep-meta"><span>😴 Sleepiness</span><span><span id="sleep-val">50</span>/100</span></div>
@@ -272,12 +281,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   <div id="viewport">
     <div id="joy-base"><div id="joy-knob"></div></div>
     <div id="store-prompt" onclick="openNearbyStore()">🏬 <span id="store-prompt-txt">Press E to Enter Shop</span></div>
+    
+    <!-- Action Controls Overlay -->
+    <div class="action-bar">
+      <button id="btn-shoot" class="act-btn act-shoot" onclick="shootWeapon()">🔥 SHOOT [SPACE]</button>
+      <button id="btn-car"   class="act-btn act-car"   onclick="toggleCarDrive()">🚘 DRIVE CAR [F]</button>
+    </div>
+
     <div id="minimap-wrap">
       <canvas id="minimap" width="130" height="130"></canvas>
     </div>
-    <div class="ctrl-hint" id="ctrl-hint">WASD / Arrow Keys or Drag Joystick to move · Avoid Cops!</div>
+    <div id="speedometer">🏎️ 0 MPH</div>
+    <div class="ctrl-hint" id="ctrl-hint">WASD = Move/Drive · SPACE = Shoot · F = Drive/Exit Car · E = Shop</div>
   </div>
-  <div id="log-line" class="log-line">&gt; Crystal woke up cursed in the city…</div>
+  <div id="log-line" class="log-line">&gt; Crystal woke up cursed in Los Santos…</div>
   <div class="consume-section">
     <div class="consume-hdr">— use shard (costs 1 crystal) —</div>
     <div class="consume-row">
@@ -440,6 +457,9 @@ function sfx(name){
     case 'overdose': beep(100,.4,'sawtooth',.12);beep(60,.8,'sawtooth',.1,.35);break;
     case 'buy':      beep(600,.08);beep(900,.14,'sine',.08,.05);break;
     case 'siren':    beep(600,.25,'sawtooth',.08);beep(900,.25,'sawtooth',.08,.25);break;
+    case 'shoot':    beep(1200,.04,'sawtooth',.12);beep(400,.08,'square',.1,.02);break;
+    case 'explode':  beep(80,.5,'sawtooth',.2);beep(40,.8,'square',.25,.1);break;
+    case 'car_start':beep(300,.15,'sawtooth',.1);beep(600,.25,'sawtooth',.1,.1);break;
   }
 }
 
@@ -495,17 +515,17 @@ const WORLD=160, SLEEP_LIMIT=100, WIN_GEMS=5, BLOCK_HALF=14;
 var gs=null, running=false;
 function makeState(){
   return{
-    sleep:50,gems:0,collected:0,wanted:0,wantedCool:0,
+    sleep:50,gems:0,collected:0,wanted:0,wantedCool:0,cash:0,
     smokeT:0,crashT:0,jittersT:0,nauseaT:0,psychoT:0,
     shield:false,overdosed:false,busted:false,phase:'playing',
-    biteCd:0,sleepAcc:0,
+    biteCd:0,sleepAcc:0,drivingCar:null,carSpeed:0,shootCd:0
   };
 }
 
 // ─── Three.js Setup & Graphics Globals ───
 var renderer=null, scene=null, camera=null, player=null, playerParts=null;
-var crystals=[], items=[], dogs=[], halls=[], buildings=[], lampGlows=[], traffic=[], peds=[], stores=[], policeCars=[], policeCops=[];
-var nearbyStore=null;
+var crystals=[], items=[], dogs=[], halls=[], buildings=[], lampGlows=[], traffic=[], peds=[], stores=[], policeCars=[], bullets=[], explosions=[];
+var nearbyStore=null, nearbyCar=null;
 var joy={active:false,dx:0,dy:0,id:null};
 var keys={};
 var camYaw=0, walkT=0, lastT=0, animId=0;
@@ -886,7 +906,7 @@ function buildCity(){
   }
 
   traffic=[];
-  for(let i=0;i<12;i++){
+  for(let i=0;i<14;i++){
     const car=makeCar(false);
     const axis=Math.random()<.5?'x':'z';
     const dir=Math.random()<.5?1:-1;
@@ -920,7 +940,7 @@ function buildCity(){
   }
 
   peds=[];
-  for(let i=0;i<18;i++){
+  for(let i=0;i<20;i++){
     const p=new THREE.Group();
     const shirt=new THREE.MeshLambertMaterial({color:Math.random()<.5?0x38bdf8:0xc084fc});
     const pants=new THREE.MeshLambertMaterial({color:0x0f172a});
@@ -983,7 +1003,7 @@ function placeInWorld(obj, minDist, avoidRoads){
 }
 
 function spawnEntities(){
-  crystals=[]; items=[]; dogs=[];
+  crystals=[]; items=[]; dogs=[]; bullets=[]; explosions=[];
   for(let i=0; i<10; i++){
     const cry = makeCrystal();
     placeInWorld(cry, 2.5, true);
@@ -1093,13 +1113,114 @@ function closeStore(){
   if(modal) modal.classList.remove('active');
 }
 
+// ── GTA V Vehicle Driving & Shooting Systems ──
+function checkNearbyCar(){
+  if(!player) return null;
+  const px = player.position.x, pz = player.position.z;
+  const allVehicles = [...traffic, ...policeCars];
+  for(const c of allVehicles){
+    const dx = c.position.x - px, dz = c.position.z - pz;
+    if(dx*dx + dz*dz < 25){
+      return c;
+    }
+  }
+  return null;
+}
+
+function toggleCarDrive(){
+  if(!gs || gs.phase!=='playing') return;
+  if(gs.drivingCar){
+    // Exit vehicle
+    const c = gs.drivingCar;
+    player.position.set(c.position.x + 2.5, .28, c.position.z);
+    player.visible = true;
+    gs.drivingCar = null;
+    gs.carSpeed = 0;
+    setLog('🚘 Exited vehicle.');
+    const btn = document.getElementById('btn-car');
+    if(btn) btn.textContent = '🚘 DRIVE CAR [F]';
+    const spd = document.getElementById('speedometer');
+    if(spd) spd.style.display = 'none';
+  } else {
+    // Enter / Hijack vehicle
+    const targetCar = checkNearbyCar();
+    if(targetCar){
+      gs.drivingCar = targetCar;
+      gs.carSpeed = 12;
+      player.visible = false;
+      sfx('car_start');
+      setLog(targetCar.userData.isPolice ? '🚨 HIJACKED POLICE INTERCEPTOR!' : '🚘 HIJACKED CIVILIAN CAR!');
+      if(gs.wanted === 0){ gs.wanted = 1; sfx('siren'); }
+      const btn = document.getElementById('btn-car');
+      if(btn) btn.textContent = '🚪 EXIT CAR [F]';
+      const spd = document.getElementById('speedometer');
+      if(spd) spd.style.display = 'block';
+    } else {
+      setLog('⚠️ Get closer to a vehicle to hijack it!');
+    }
+  }
+  updateHud();
+}
+
+function shootWeapon(){
+  if(!gs || gs.phase!=='playing' || gs.shootCd > 0) return;
+  gs.shootCd = 0.22;
+  sfx('shoot');
+  
+  const bMat = new THREE.MeshBasicMaterial({color: 0x06efef});
+  const bullet = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 8), bMat);
+  const glow = glowSprite(0x06efef, 2.5, 0.9);
+  bullet.add(glow);
+
+  let startPos = player.position.clone();
+  let yaw = player.rotation.y;
+  if(gs.drivingCar){
+    startPos = gs.drivingCar.position.clone();
+    yaw = gs.drivingCar.rotation.y;
+  }
+  
+  bullet.position.set(startPos.x + Math.sin(yaw)*1.5, 1.5, startPos.z + Math.cos(yaw)*1.5);
+  bullet.userData = {
+    vx: Math.sin(yaw) * 70,
+    vz: Math.cos(yaw) * 70,
+    life: 1.2
+  };
+  scene.add(bullet);
+  bullets.push(bullet);
+
+  if(gs.wanted < 5 && Math.random() < 0.35){
+    gs.wanted = Math.min(5, gs.wanted + 1);
+    setLog('🚨 GUNSHOTS FIRED! Police Wanted Level ⭐' + gs.wanted);
+    sfx('siren');
+  }
+}
+
+function triggerExplosion(pos){
+  sfx('explode');
+  screenShake();
+  const exp = new THREE.Group();
+  for(let i=0; i<15; i++){
+    const pMat = new THREE.MeshBasicMaterial({
+      color: Math.random()<.5 ? 0xf43f5e : 0xfbbf24, transparent:true, opacity:0.9
+    });
+    const p = new THREE.Mesh(new THREE.SphereGeometry(0.4 + Math.random()*0.4, 6, 6), pMat);
+    const angle = Math.random() * Math.PI * 2, speed = 4 + Math.random() * 8;
+    p.userData = { vx: Math.cos(angle)*speed, vy: 3 + Math.random()*6, vz: Math.sin(angle)*speed };
+    exp.add(p);
+  }
+  exp.position.copy(pos);
+  exp.userData = { life: 0.6 };
+  scene.add(exp);
+  explosions.push(exp);
+}
+
 // ── Input Systems ──
 function setupJoystick(){
   const vp=document.getElementById('viewport');
   const base=document.getElementById('joy-base'), knob=document.getElementById('joy-knob');
   if(!vp||!base||!knob)return;
   const start=e=>{
-    if(e.target.closest('#minimap-wrap') || e.target.closest('#store-prompt')) return;
+    if(e.target.closest('#minimap-wrap') || e.target.closest('#store-prompt') || e.target.closest('.action-bar')) return;
     const touch=e.touches?e.touches[0]:e;
     joy.active=true; joy.id=touch.identifier??'mouse';
     const r=vp.getBoundingClientRect();
@@ -1127,15 +1248,18 @@ function setupJoystick(){
   window.addEventListener('pointermove',move);
   window.addEventListener('pointerup',end);
   window.addEventListener('keydown',e=>{ 
-    keys[e.key.toLowerCase()]=true; 
-    if(e.key.toLowerCase()==='e'){ openNearbyStore(); }
+    const k = e.key.toLowerCase();
+    keys[k]=true; 
+    if(k==='e'){ openNearbyStore(); }
+    if(k==='f'){ toggleCarDrive(); }
+    if(e.code==='Space'){ shootWeapon(); e.preventDefault(); }
   });
   window.addEventListener('keyup',e=>{ keys[e.key.toLowerCase()]=false; });
 }
 
 var walkTarget=null, targetMarker=null;
 function tapWalk(e){
-  if(!camera||!scene)return;
+  if(!camera||!scene||gs.drivingCar)return;
   const vp=document.getElementById('viewport');
   if(!vp)return;
   const r=vp.getBoundingClientRect();
@@ -1242,6 +1366,8 @@ function updateHud(){
   }
   const gemsCtEl = document.getElementById('gems-ct');
   if(gemsCtEl) gemsCtEl.textContent='💎 '+gs.gems+'/'+WIN_GEMS;
+  const cashCtEl = document.getElementById('cash-ct');
+  if(cashCtEl) cashCtEl.textContent='💵 $'+gs.cash;
   
   const starsEl = document.getElementById('wanted-stars');
   if(starsEl){
@@ -1257,6 +1383,7 @@ function updateHud(){
   const sr=document.getElementById('status-row');
   if(sr){
     let html='';
+    if(gs.drivingCar)html+='<span class="sbadge sbadge-car">🚘 DRIVING (' + Math.round(gs.carSpeed*2.2) + ' MPH)</span>';
     if(gs.wanted>0)  html+='<span class="sbadge sbadge-crash">🚨 WANTED LEVEL ⭐'+gs.wanted+'</span>';
     if(gs.smokeT>0)  html+='<span class="sbadge sbadge-smoke">💨 High ('+Math.ceil(gs.smokeT)+'s)</span>';
     if(gs.crashT>0)  html+='<span class="sbadge sbadge-crash">💥 Crash ('+Math.ceil(gs.crashT)+'s)</span>';
@@ -1292,7 +1419,8 @@ function drawMinimap(){
   x.fillStyle='rgba(6,10,24,.95)';x.fillRect(0,0,130,130);
   
   const scale=65/(WORLD+10);
-  const px=player.position.x,pz=player.position.z;
+  const px=gs.drivingCar ? gs.drivingCar.position.x : player.position.x;
+  const pz=gs.drivingCar ? gs.drivingCar.position.z : player.position.z;
   x.translate(65,65);
   
   const dot=(wx,wz,color,r)=>{
@@ -1309,8 +1437,8 @@ function drawMinimap(){
   }
 
   for(const st of stores)dot(st.x,st.z,'#c084fc',4);
-  for(const c of traffic)dot(c.position.x,c.position.z,'#f97316',2.5);
-  for(const pc of policeCars)dot(pc.position.x,pc.position.z,'#f43f5e',4);
+  for(const c of traffic)if(c !== gs.drivingCar)dot(c.position.x,c.position.z,'#f97316',2.5);
+  for(const pc of policeCars)if(pc !== gs.drivingCar)dot(pc.position.x,pc.position.z,'#f43f5e',4);
   for(const g of crystals)dot(g.position.x,g.position.z,'#06efef',3.5);
   for(const it of items)dot(it.position.x,it.position.z,it.userData.kind==='shield'?'#38bdf8':'#22c55e',2.5);
   for(const d of dogs)dot(d.position.x,d.position.z,'#f43f5e',3);
@@ -1351,7 +1479,7 @@ function startGame(){
 
   camYaw=0;walkT=0;walkTarget=null;targetMarker=null;
   fitViewport();
-  setLog('Crystal woke up cursed in Los Santos 🚨 Avoid Police Cruisers! Bank 5 crystals!');
+  setLog('Welcome to Los Santos! WASD = Move/Drive · SPACE = Shoot · F = Drive Car');
   const hint = document.getElementById('ctrl-hint');
   if(hint) hint.style.display='';
   updateHud();
@@ -1396,7 +1524,7 @@ function endGame(result){
             : "😴 Crystal's mind and body gave out on the street. This is what meth does to people.";
     }
     const scoreEl = document.getElementById('end-score');
-    if(scoreEl) scoreEl.textContent='Crystals collected: '+gs.collected+' | Best: '+getBest();
+    if(scoreEl) scoreEl.textContent='Crystals collected: '+gs.collected+' | Cash: $'+gs.cash+' | Best: '+getBest();
     show('end');
   },700);
 }
@@ -1430,6 +1558,7 @@ function tick(t){
   }
   gs.sleep=Math.min(SLEEP_LIMIT,gs.sleep+rate*dt);
   gs.biteCd=Math.max(0,gs.biteCd-dt);
+  gs.shootCd=Math.max(0,gs.shootCd-dt);
   if(gs.sleep>=SLEEP_LIMIT){endGame('lost');return;}
 
   if(gs.wanted > 0){
@@ -1444,41 +1573,123 @@ function tick(t){
 
   const inp=inputVector();
   const speed=9.5;
-  let mx=0,mz=0,mag=0;
-  if(inp.mag>0.05){
-    clearWalkTarget();
-    const sin=Math.sin(camYaw),cos=Math.cos(camYaw);
-    mx=(inp.ix*cos - inp.iz*sin); mz=(inp.ix*sin + inp.iz*cos);
-    mag=inp.mag;
-  }else if(walkTarget){
-    const dx=walkTarget.x-player.position.x,dz=walkTarget.z-player.position.z;
-    const d=Math.hypot(dx,dz);
-    if(d<.9)clearWalkTarget();
-    else{mx=dx/d;mz=dz/d;mag=1;}
+
+  // ── Bullet Projectiles Movement & Collisions ──
+  for(let i=bullets.length-1; i>=0; i--){
+    const b = bullets[i];
+    b.position.x += b.userData.vx * dt;
+    b.position.z += b.userData.vz * dt;
+    b.userData.life -= dt;
+    
+    // Bullet hit dogs
+    for(let j=dogs.length-1; j>=0; j--){
+      const d = dogs[j];
+      const dx = d.position.x - b.position.x, dz = d.position.z - b.position.z;
+      if(dx*dx + dz*dz < 6){
+        triggerExplosion(d.position);
+        scene.remove(d); dogs.splice(j, 1);
+        b.userData.life = 0;
+        gs.cash += 150;
+        setLog('💥 Destroyed a hostile dog! +$150');
+        break;
+      }
+    }
+    if(b.userData.life <= 0){
+      scene.remove(b); bullets.splice(i, 1);
+    }
   }
 
-  if(mag>0){
-    const px=player.position.x,pz=player.position.z;
-    const nx=px+mx*speed*mag*dt; const nz=pz+mz*speed*mag*dt;
-    if(!collide(nx,player.position.z))player.position.x=Math.max(-WORLD,Math.min(WORLD,nx));
-    if(!collide(player.position.x,nz))player.position.z=Math.max(-WORLD,Math.min(WORLD,nz));
+  // ── Explosions Animation ──
+  for(let i=explosions.length-1; i>=0; i--){
+    const exp = explosions[i];
+    exp.userData.life -= dt;
+    for(const p of exp.children){
+      p.position.x += p.userData.vx * dt;
+      p.position.y += p.userData.vy * dt;
+      p.position.z += p.userData.vz * dt;
+      p.userData.vy -= 9.8 * dt;
+    }
+    if(exp.userData.life <= 0){
+      scene.remove(exp); explosions.splice(i, 1);
+    }
+  }
+
+  // ── Player Driving vs Walking Logic ──
+  if(gs.drivingCar){
+    const car = gs.drivingCar;
+    let accel = 0, turn = 0;
+    if(inp.iz < 0) accel = 35; // W = Accelerate forward
+    else if(inp.iz > 0) accel = -18; // S = Reverse/Brake
+    if(inp.ix < 0) turn = 2.4; // A = Turn Left
+    else if(inp.ix > 0) turn = -2.4; // D = Turn Right
+
+    gs.carSpeed += accel * dt;
+    gs.carSpeed *= 0.96; // Friction drag
+
+    car.rotation.y += turn * (gs.carSpeed / 25) * dt;
+    const nx = car.position.x + Math.sin(car.rotation.y) * gs.carSpeed * dt;
+    const nz = car.position.z + Math.cos(car.rotation.y) * gs.carSpeed * dt;
+
+    if(!collide(nx, car.position.z)) car.position.x = Math.max(-WORLD, Math.min(WORLD, nx));
+    if(!collide(car.position.x, nz)) car.position.z = Math.max(-WORLD, Math.min(WORLD, nz));
     
-    const targetYaw=Math.atan2(mx,mz);
-    let dy=targetYaw-player.rotation.y;
-    while(dy>Math.PI)dy-=Math.PI*2;while(dy<-Math.PI)dy+=Math.PI*2;
-    player.rotation.y+=dy*Math.min(1,dt*14);
+    player.position.copy(car.position);
     
-    walkT+=dt*12*mag;
-    const sw=Math.sin(walkT)*.6;
-    playerParts.legL.rotation.x=sw;playerParts.legR.rotation.x=-sw;
-    playerParts.armL.rotation.x=-sw*.85;playerParts.armR.rotation.x=sw*.85;
-  }else{
-    playerParts.legL.rotation.x*=.8;playerParts.legR.rotation.x*=.8;
-    playerParts.armL.rotation.x*=.8;playerParts.armR.rotation.x*=.8;
+    const spdEl = document.getElementById('speedometer');
+    if(spdEl) spdEl.textContent = '🏎️ ' + Math.round(Math.abs(gs.carSpeed)*2.4) + ' MPH';
+
+    // Vehicle crushing dogs
+    for(let j=dogs.length-1; j>=0; j--){
+      const d = dogs[j];
+      const dx = d.position.x - car.position.x, dz = d.position.z - car.position.z;
+      if(dx*dx + dz*dz < 12 && Math.abs(gs.carSpeed) > 8){
+        triggerExplosion(d.position);
+        scene.remove(d); dogs.splice(j, 1);
+        gs.cash += 200;
+        setLog('💥 RAN OVER HOSTILE DOG! +$200');
+      }
+    }
+  } else {
+    // ── Corrected Camera-Relative Player Walking Math ──
+    let mx=0,mz=0,mag=0;
+    if(inp.mag>0.05){
+      clearWalkTarget();
+      const sin=Math.sin(camYaw), cos=Math.cos(camYaw);
+      // Fixed Controls Vector: W=Forward, S=Backward, A=Left, D=Right
+      mx = (inp.ix * cos - inp.iz * sin);
+      mz = (-inp.ix * sin - inp.iz * cos);
+      mag = inp.mag;
+    }else if(walkTarget){
+      const dx=walkTarget.x-player.position.x, dz=walkTarget.z-player.position.z;
+      const d=Math.hypot(dx,dz);
+      if(d<.9)clearWalkTarget();
+      else{mx=dx/d; mz=dz/d; mag=1;}
+    }
+
+    if(mag>0){
+      const px=player.position.x, pz=player.position.z;
+      const nx=px+mx*speed*mag*dt; const nz=pz+mz*speed*mag*dt;
+      if(!collide(nx,player.position.z))player.position.x=Math.max(-WORLD,Math.min(WORLD,nx));
+      if(!collide(player.position.x,nz))player.position.z=Math.max(-WORLD,Math.min(WORLD,nz));
+      
+      const targetYaw=Math.atan2(mx,mz);
+      let dy=targetYaw-player.rotation.y;
+      while(dy>Math.PI)dy-=Math.PI*2;while(dy<-Math.PI)dy+=Math.PI*2;
+      player.rotation.y+=dy*Math.min(1,dt*14);
+      
+      walkT+=dt*12*mag;
+      const sw=Math.sin(walkT)*.6;
+      playerParts.legL.rotation.x=sw;playerParts.legR.rotation.x=-sw;
+      playerParts.armL.rotation.x=-sw*.85;playerParts.armR.rotation.x=sw*.85;
+    }else{
+      playerParts.legL.rotation.x*=.8;playerParts.legR.rotation.x*=.8;
+      playerParts.armL.rotation.x*=.8;playerParts.armR.rotation.x*=.8;
+    }
   }
 
   const EDGE=WORLD+18;
   for(const car of traffic){
+    if(car === gs.drivingCar) continue;
     const u=car.userData;
     if(u.axis==='x'){
       car.position.x+=u.dir*u.speed*dt;
@@ -1489,7 +1700,7 @@ function tick(t){
       if(car.position.z>EDGE)car.position.z=-EDGE;
       if(car.position.z<-EDGE)car.position.z=EDGE;
     }
-    if(dist2(car.position)<10&&gs.biteCd<=0){
+    if(dist2(car.position)<10&&gs.biteCd<=0&&!gs.drivingCar){
       gs.biteCd=3;
       if(gs.shield){gs.shield=false;setLog('🛡️ Shield took the hit from a car!');sfx('shield');flash('fl-shield');}
       else{
@@ -1502,6 +1713,7 @@ function tick(t){
   }
 
   for(const pCar of policeCars){
+    if(pCar === gs.drivingCar) continue;
     const u=pCar.userData;
     if(u.redGlow && u.blueGlow){
       const flashR = Math.sin(t * 0.015) > 0;
@@ -1556,17 +1768,26 @@ function tick(t){
     u.armL.rotation.x=-sw*.7;u.armR.rotation.x=sw*.7;
   }
 
-  let wantYaw=player.rotation.y;
-  let dyc=wantYaw-camYaw;
+  // Camera lerp behind player or vehicle
+  let targetPos = player.position;
+  let targetYaw = player.rotation.y;
+  let camDist = 11.5, camH = 6.2;
+  if(gs.drivingCar){
+    targetPos = gs.drivingCar.position;
+    targetYaw = gs.drivingCar.rotation.y;
+    camDist = 15; camH = 7.5;
+  }
+
+  let dyc=targetYaw-camYaw;
   while(dyc>Math.PI)dyc-=Math.PI*2;while(dyc<-Math.PI)dyc+=Math.PI*2;
-  camYaw+=dyc*Math.min(1,dt*2.5);
-  const camDist=11.5,camH=6.2;
+  camYaw+=dyc*Math.min(1,dt*3.5);
+  
   let wob=0,wobY=0;
   if(gs.psychoT>0){wob=Math.sin(t*.0022)*1.8;wobY=Math.sin(t*.0017)*1.2;}
-  const cx=player.position.x-Math.sin(camYaw)*camDist+wob;
-  const cz=player.position.z-Math.cos(camYaw)*camDist;
-  camera.position.lerp(new THREE.Vector3(cx,camH+wobY,cz),Math.min(1,dt*6));
-  camera.lookAt(player.position.x,2.2,player.position.z);
+  const cx=targetPos.x-Math.sin(camYaw)*camDist+wob;
+  const cz=targetPos.z-Math.cos(camYaw)*camDist;
+  camera.position.lerp(new THREE.Vector3(cx,camH+wobY,cz),Math.min(1,dt*8));
+  camera.lookAt(targetPos.x,2.2,targetPos.z);
 
   for(let i=crystals.length-1;i>=0;i--){
     const g=crystals[i];
@@ -1577,8 +1798,8 @@ function tick(t){
     g.position.y=gy;
     if(dist2(g.position)<6.5){
       scene.remove(g);crystals.splice(i,1);
-      gs.gems++;gs.collected++;
-      setLog('💎 Crystal banked! '+gs.gems+'/'+WIN_GEMS+' — spend or save?');
+      gs.gems++;gs.collected++;gs.cash+=500;
+      setLog('💎 Banked 1 Crystal & +$500 cash! '+gs.gems+'/'+WIN_GEMS);
       sfx('gem');flash('fl-gem');gemBurst();
       if(gs.gems>=WIN_GEMS){endGame('won');return;}
     }
@@ -1617,7 +1838,7 @@ function tick(t){
     u.tail.rotation.x=Math.sin(t*.025)*.7;
     const ls=Math.sin(t*.025)*.45;
     u.legs[0].rotation.x=ls;u.legs[1].rotation.x=-ls;u.legs[2].rotation.x=-ls;u.legs[3].rotation.x=ls;
-    if(pd<2.6&&gs.biteCd<=0){
+    if(pd<2.6&&gs.biteCd<=0&&!gs.drivingCar){
       gs.biteCd=2.5;
       if(gs.shield){gs.shield=false;setLog('🛡️ Shield blocked a dog bite!');sfx('shield');flash('fl-shield');}
       else{
@@ -1637,7 +1858,8 @@ function tick(t){
 }
 
 function dist2(p){
-  const dx=p.x-player.position.x,dz=p.z-player.position.z;
+  const target = gs.drivingCar ? gs.drivingCar.position : player.position;
+  const dx=p.x-target.x, dz=p.z-target.z;
   return dx*dx+dz*dz;
 }
 
